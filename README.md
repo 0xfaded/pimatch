@@ -8,6 +8,14 @@ bit-twiddling implementation.
 
 GPLv3
 
+## Building
+
+A copy of DBoW used by ORB_SLAM is included in the `demo/` directory. In order
+to build the `HammingTreeDemo`, DBoW must be build first.
+
+The default version of g++ installed on the raspberry pi may crash when compiling
+DBoW. In this case, use g++-6 or later.
+
 ## Core Primitives
 The library provides several primitive matching methods which differ only in how
 the descriptors are arranged in memory.

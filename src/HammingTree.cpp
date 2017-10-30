@@ -193,6 +193,9 @@ void HammingTree::ApproxNNrec_(size_t node_i, size_t *matches,
 
 bool HammingTree::Read(std::istream &in) {
   tree_.clear();
+  weights_.clear();
+  node_ids_.clear();
+
   delete[] reinterpret_cast<uint8_t *>(descriptors_);
 
   // dummy descriptor and weight for root node
@@ -262,6 +265,7 @@ bool HammingTree::Read(std::istream &in) {
 
   dfs.push(std::pair<size_t, size_t>(0, 0));
   tree_.emplace_back();
+  node_ids_.resize(node_id);
 
   while (!dfs.empty()) {
     std::pair<size_t, size_t> mapping = dfs.top();
@@ -272,7 +276,7 @@ bool HammingTree::Read(std::istream &in) {
 
     tree_[index].children = tree_.size();
     tree_[index].num_children = children[node_id].size();
-    tree_[index].node_id = node_id;
+    node_ids_[index] = node_id;
 
     // move descriptor to correct location
     std::memcpy(descriptors_[index], &descriptors[node_id*32], 32);

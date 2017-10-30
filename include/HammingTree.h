@@ -33,7 +33,7 @@ class HammingTree {
   /// Only used for DBoW compatibility. HammingTree uses node index
   /// in tree_ as an identifier.
   float GetNodeId(size_t node_i) const {
-    return tree_[node_i].node_id;
+    return node_ids_[node_i];
   }
 
   /// Create a classifier which associates a classified leaf node index
@@ -48,7 +48,6 @@ class HammingTree {
   struct Node {
     size_t children;
     size_t num_children;
-    size_t node_id;
   };
 
   struct Classifier {
@@ -70,6 +69,7 @@ class HammingTree {
   // very simple to implement.
   std::vector<Node> tree_;
   std::vector<float> weights_;
+  std::vector<size_t> node_ids_;
   uint8_t (*descriptors_)[32];
 };
 

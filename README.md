@@ -11,7 +11,7 @@ GPLv3
 ## Building
 
 A copy of DBoW used by ORB_SLAM is included in the `demo/` directory. In order
-to build the `HammingTreeDemo`, DBoW must be build first.
+to build the `HammingTreeDemo`, DBoW must be built first.
 
 The default version of g++ installed on the raspberry pi may crash when compiling
 DBoW. In this case, use g++-6 or later.
@@ -40,10 +40,12 @@ The currently available methods are
 ```
  hammingMatch256ddd
  hammingMatch256ddi
+ hammingMatch256did
  hammingMatch256idi
  hammingMatch256dii
  hammingMatch256ddd2
  hammingMatch256ddi2
+ hammingMatch256did2
  hammingMatch256idi2
  hammingMatch256dii2
 ```

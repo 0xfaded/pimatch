@@ -23,6 +23,10 @@ void referenceDDI(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
     size_t *indices, size_t num_haystack, size_t num_needle,
     size_t haystack_base);
 
+void referenceDID(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
+    size_t *indices, size_t num_haystack, size_t num_needle,
+    size_t haystack_base);
+
 void referenceIDI(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
     size_t *indices, size_t num_haystack, size_t num_needle,
     size_t haystack_base);
@@ -36,6 +40,10 @@ void referenceDDD2(uint32_t *matches, uint8_t *haystack,
     size_t num_needle, size_t haystack_base);
 
 void referenceDDI2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
+    size_t *indices, size_t num_haystack, size_t num_needle,
+    size_t haystack_base);
+
+void referenceDID2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
     size_t *indices, size_t num_haystack, size_t num_needle,
     size_t haystack_base);
 
@@ -112,6 +120,50 @@ TEST_P(HammingMatchTest, randomMatch256ddi) {
       num_descriptors, num_queries, haystack_base);
 
   referenceDDI(matches_reference, haystack, needle, indices,
+      num_descriptors, num_queries, haystack_base);
+
+  for (size_t i = 0; i < num_queries; i += 1) {
+    EXPECT_EQ(matches[i], matches_reference[i]);
+  }
+
+  // check for overrun
+  EXPECT_EQ(matches[num_queries], 0xdeadbeef);
+
+  delete[] haystack;
+  delete[] needle;
+  delete[] indices;
+  delete[] matches;
+  delete[] matches_reference;
+}
+
+TEST_P(HammingMatchTest, randomMatch256did) {
+  size_t num_descriptors = ::std::get<0>(GetParam());
+  size_t num_queries = ::std::get<1>(GetParam());
+
+  // use a > 16 bit number to test 24 bit indices
+  size_t haystack_base = 0x12345;
+
+  uint8_t *haystack = new uint8_t[num_descriptors*32];
+  uint8_t *needle = new uint8_t[num_queries*32];
+  size_t *indices = new size_t[num_descriptors];
+  uint32_t *matches = new size_t[num_queries+1];
+  uint32_t *matches_reference = new size_t[num_queries];
+
+  matches[num_queries] = 0xdeadbeef;
+
+  std::mt19937 rng;
+  test_util::fill_random(32, 32, num_descriptors, haystack, rng);
+  test_util::fill_random(32, 32, num_queries, needle, rng);
+
+  for (size_t i = 0; i < num_descriptors; i += 1) {
+    indices[i] = i;
+  }
+  std::shuffle(indices, indices+num_descriptors, rng);
+
+  pimatch::hammingMatch256did(matches, haystack, needle, indices,
+      num_descriptors, num_queries, haystack_base);
+
+  referenceDID(matches_reference, haystack, needle, indices,
       num_descriptors, num_queries, haystack_base);
 
   for (size_t i = 0; i < num_queries; i += 1) {
@@ -436,6 +488,50 @@ static uint32_t distance(uint8_t *a, uint8_t *b) {
   return distance;
 }
 
+TEST_P(HammingMatchTest, randomMatch256did2) {
+  size_t num_descriptors = ::std::get<0>(GetParam());
+  size_t num_queries = ::std::get<1>(GetParam());
+
+  // use a > 16 bit number to test 24 bit indices
+  size_t haystack_base = 0x12345;
+
+  uint8_t *haystack = new uint8_t[num_descriptors*32];
+  uint8_t *needle = new uint8_t[num_queries*32];
+  size_t *indices = new size_t[num_descriptors];
+  uint32_t *matches = new size_t[num_queries*2+1];
+  uint32_t *matches_reference = new size_t[num_queries*2];
+
+  matches[num_queries*2] = 0xdeadbeef;
+
+  std::mt19937 rng;
+  test_util::fill_random(32, 32, num_descriptors, haystack, rng);
+  test_util::fill_random(32, 32, num_queries, needle, rng);
+
+  for (size_t i = 0; i < num_descriptors; i += 1) {
+    indices[i] = i;
+  }
+  std::shuffle(indices, indices+num_descriptors, rng);
+
+  pimatch::hammingMatch256did2(matches, haystack, needle, indices,
+      num_descriptors, num_queries, haystack_base);
+
+  referenceDID2(matches_reference, haystack, needle, indices,
+      num_descriptors, num_queries, haystack_base);
+
+  for (size_t i = 0; i < num_queries*2; i += 1) {
+    EXPECT_EQ(matches[i], matches_reference[i]);
+  }
+
+  // check for overrun
+  EXPECT_EQ(matches[num_queries*2], 0xdeadbeef);
+
+  delete[] haystack;
+  delete[] needle;
+  delete[] indices;
+  delete[] matches;
+  delete[] matches_reference;
+}
+
 void referenceDDD(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
     size_t num_haystack, size_t num_indices, size_t haystack_base) {
 
@@ -464,6 +560,26 @@ void referenceDDI(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
     for (size_t j = 0; j < num_haystack; j += 1) {
       uint32_t score = distance(&haystack[j*32], &needle[index*32]);
       score = (score << 24) | (haystack_base + j);
+
+      if (score < best) {
+        best = score;
+      }
+    }
+    matches[i] = best;
+  }
+}
+
+void referenceDID(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
+    size_t *indices, size_t num_haystack, size_t num_indices,
+    size_t haystack_base) {
+
+  for (size_t i = 0; i < num_indices; i += 1) {
+    uint32_t best = 0xffffffff;
+    for (size_t j = 0; j < num_haystack; j += 1) {
+      size_t index = indices[j];
+
+      uint32_t score = distance(&haystack[index*32], &needle[i*32]);
+      score = (score << 24) | (haystack_base + index);
 
       if (score < best) {
         best = score;
@@ -613,5 +729,31 @@ void referenceDII2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
     matches[2*i+1] = best2;
   }
 }
+
+void referenceDID2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
+    size_t *indices, size_t num_haystack, size_t num_indices,
+    size_t haystack_base) {
+
+  for (size_t i = 0; i < num_indices; i += 1) {
+    uint32_t best = 0xffffffff;
+    uint32_t best2 = 0xffffffff;
+    for (size_t j = 0; j < num_haystack; j += 1) {
+      size_t index = indices[j];
+
+      uint32_t score = distance(&haystack[index*32], &needle[i*32]);
+      score = (score << 24) | (haystack_base + index);
+
+      if (score < best) {
+        best2 = best;
+        best = score;
+      } else if (score < best2) {
+        best2 = score;
+      }
+    }
+    matches[2*i] = best;
+    matches[2*i+1] = best2;
+  }
+}
+
 
 } /* namespace */

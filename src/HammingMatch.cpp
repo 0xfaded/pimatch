@@ -11,6 +11,7 @@ namespace pimatch {
 namespace match_params {
 struct DDD;
 struct DDI;
+struct DID;
 struct IDI;
 struct DII;
 
@@ -40,6 +41,15 @@ void hammingMatch256ddi(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
 
   hammingMatch256Base<DDI, best1>(
       matches, haystack, needle, nullptr, needle_indices,
+      num_haystack, num_needle, haystack_base);
+}
+
+void hammingMatch256did(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
+    size_t *haystack_indices, size_t num_haystack, size_t num_needle,
+    size_t haystack_base) {
+
+  hammingMatch256Base<DID, best1>(
+      matches, haystack, needle, haystack_indices, nullptr,
       num_haystack, num_needle, haystack_base);
 }
 
@@ -93,6 +103,15 @@ void hammingMatch256dii2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
 
   hammingMatch256Base<DII, best2>(
       matches, haystack, needle, haystack_indices, needle_indices,
+      num_haystack, num_needle, haystack_base);
+}
+
+void hammingMatch256did2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
+    size_t *haystack_indices, size_t num_haystack, size_t num_needle,
+    size_t haystack_base) {
+
+  hammingMatch256Base<DID, best2>(
+      matches, haystack, needle, haystack_indices, nullptr,
       num_haystack, num_needle, haystack_base);
 }
 
@@ -282,6 +301,7 @@ struct DDI : public DenseMatch, public DenseHaystack, public IndexNeedle {
     indices += 4;
   }
 };
+struct DID : public DenseMatch, public IndexHaystack, public DenseNeedle {};
 struct IDI : public IndexMatch, public DenseHaystack, public IndexNeedle {};
 struct DII : public DenseMatch, public IndexHaystack, public IndexNeedle {
   template <bool n_bests>

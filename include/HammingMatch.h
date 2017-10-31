@@ -42,6 +42,13 @@ void hammingMatch256ddi(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
     size_t haystack_base = 0);
 
 /// Brute-force match 256 bit binary descriptors.
+/// Haystack is indexed.
+///
+void hammingMatch256did(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
+    size_t *haystack_indices, size_t num_haystack, size_t num_needle,
+    size_t haystack_base = 0);
+
+/// Brute-force match 256 bit binary descriptors.
 /// Both matches and needle are indexed, e.g. if indices[i] = 10,
 ///    matches[10] = best_match(needle[10])
 ///
@@ -70,6 +77,13 @@ void hammingMatch256ddd2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
 ///
 void hammingMatch256ddi2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
     size_t *needle_indices, size_t num_haystack, size_t num_needle,
+    size_t haystack_base = 0);
+
+/// Brute-force match 256 bit binary descriptors. Return two best matches.
+/// Haystack is indexed.
+///
+void hammingMatch256did2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
+    size_t *haystack_indices, size_t num_haystack, size_t num_needle,
     size_t haystack_base = 0);
 
 /// Brute-force match 256 bit binary descriptors. Return two best matches.

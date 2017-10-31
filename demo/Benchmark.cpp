@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 
   std::clock_t begin, end;
 
-  std::cout << "N ddd ddi idi dii ddd2 ddi2 idi2 dii2" << std::endl;
+  std::cout << "N ddd ddi did idi dii ddd2 ddi2 did2 idi2 dii2" << std::endl;
   for (size_t i = 250; i <= max_size; i += 250) {
     std::cout << i << " ";
 
@@ -51,6 +51,14 @@ int main(int argc, char **argv) {
     for (int j = 0; j < N; j += 1) {
       pimatch::hammingMatch256ddi(matches, haystack, needle,
           needle_indices, i, i);
+    }
+    end = std::clock();
+    print_delta(begin, end, " ");
+
+    begin = std::clock();
+    for (int j = 0; j < N; j += 1) {
+      pimatch::hammingMatch256did(matches, haystack, needle,
+          haystack_indices, i, i);
     }
     end = std::clock();
     print_delta(begin, end, " ");
@@ -82,6 +90,14 @@ int main(int argc, char **argv) {
     for (int j = 0; j < N; j += 1) {
       pimatch::hammingMatch256ddi2(matches, haystack, needle,
           needle_indices, i, i);
+    }
+    end = std::clock();
+    print_delta(begin, end, " ");
+
+    begin = std::clock();
+    for (int j = 0; j < N; j += 1) {
+      pimatch::hammingMatch256did2(matches, haystack, needle,
+          haystack_indices, i, i);
     }
     end = std::clock();
     print_delta(begin, end, " ");

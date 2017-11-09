@@ -20,14 +20,19 @@ class HammingTree {
 
   ~HammingTree();
 
-  void ApproxNN(uint32_t *matches, uint8_t *needle, size_t num_indices);
-  void ApproxNNi(uint32_t *matches, size_t *indices, uint8_t *needle,
-      size_t num_indices);
+  void ApproxNN(uint32_t *matches, const uint8_t *needle,
+      size_t num_indices) const;
+  void ApproxNNi(uint32_t *matches, size_t *indices, const uint8_t *needle,
+      size_t num_indices) const;
 
-  void ApproxOneNN(size_t node_i, uint32_t *match, uint8_t *needle);
+  void ApproxOneNN(size_t node_i, uint32_t *match, const uint8_t *needle) const;
 
   float GetWeight(size_t node_i) const {
     return weights_[node_i];
+  }
+
+  bool IsStopWord(size_t node_i) const {
+    return weights_[node_i] == 0;
   }
 
   /// Only used for DBoW compatibility. HammingTree uses node index
@@ -36,10 +41,18 @@ class HammingTree {
     return node_ids_[node_i];
   }
 
+  size_t Size() const {
+    return tree_.size();
+  }
+
   /// Create a classifier which associates a classified leaf node index
   /// with its ancestor node num_levels_down from the root tree.
   /// This is useful for higher level clustering.
-  Classifier BuildClassifier(size_t num_levels_down);
+  Classifier BuildClassifier(size_t num_levels_down) const;
+
+  bool Read(const std::string &filename);
+  bool ReadBinary(const std::string &filename);
+  bool WriteBinary(const std::string &filename);
 
   bool Read(std::istream &in);
   bool ReadBinary(std::istream &in);
@@ -63,7 +76,7 @@ class HammingTree {
 
  protected:
   void ApproxNNrec_(size_t node_i, uint32_t *matches, size_t *indices,
-      uint8_t *needle, size_t num_indices);
+      const uint8_t *needle, size_t num_indices) const;
 
   // The entire tree, laid out in DFS order. This makes Classifier
   // very simple to implement.

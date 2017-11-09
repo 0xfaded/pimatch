@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -23,8 +24,8 @@ HammingTree::~HammingTree() {
   delete[] reinterpret_cast<uint8_t *>(descriptors_);
 }
 
-void HammingTree::ApproxNN(uint32_t *matches, uint8_t *needle,
-    size_t num_indices) {
+void HammingTree::ApproxNN(uint32_t *matches, const uint8_t *needle,
+    size_t num_indices) const {
 
   if (num_indices == 0) {
     return;
@@ -56,7 +57,7 @@ void HammingTree::ApproxNN(uint32_t *matches, uint8_t *needle,
 }
 
 void HammingTree::ApproxNNi(uint32_t *matches, size_t *indices,
-    uint8_t *needle, size_t num_indices) {
+    const uint8_t *needle, size_t num_indices) const {
 
   if (num_indices == 0) {
     return;
@@ -87,7 +88,9 @@ void HammingTree::ApproxNNi(uint32_t *matches, size_t *indices,
   delete[] indices2;
 }
 
-HammingTree::Classifier HammingTree::BuildClassifier(size_t num_levels_down) {
+HammingTree::Classifier HammingTree::BuildClassifier(size_t num_levels_down)
+  const {
+
   std::stack<std::pair<size_t, size_t>> dfs;
   dfs.push(std::pair<size_t, size_t>(0, 0));
 
@@ -123,7 +126,7 @@ HammingTree::Classifier HammingTree::BuildClassifier(size_t num_levels_down) {
 }
 
 void HammingTree::ApproxOneNN(size_t node_i, uint32_t *match,
-    uint8_t *needle) {
+    const uint8_t *needle) const {
 
   const Node &node = tree_[node_i];
   if (node.num_children == 0) {
@@ -152,7 +155,7 @@ void HammingTree::ApproxOneNN(size_t node_i, uint32_t *match,
 }
 
 void HammingTree::ApproxNNrec_(size_t node_i, size_t *matches,
-    size_t *indices, uint8_t *needle, size_t num_indices) {
+    size_t *indices, const uint8_t *needle, size_t num_indices) const {
 
   if (num_indices < 8) {
     for (size_t i = 0; i < num_indices; i += 1) {
@@ -189,6 +192,19 @@ void HammingTree::ApproxNNrec_(size_t node_i, size_t *matches,
       ApproxNNrec_(c, matches, indices2, needle, match_i);
     }
   }
+}
+
+bool HammingTree::Read(const std::string &filename) {
+  std::ifstream f;
+  f.open(filename, std::ios::in);
+
+  if (!f.good()) {
+    return false;
+  }
+
+  bool ok = Read(f);
+  f.close();
+  return ok;
 }
 
 bool HammingTree::Read(std::istream &in) {
@@ -297,6 +313,21 @@ bool HammingTree::Read(std::istream &in) {
   return !tree_.empty();
 }
 
+bool HammingTree::ReadBinary(const std::string &filename) {
+  std::ifstream f;
+  f.open(filename, std::ios::in | std::ios::binary);
+
+  std::cout << filename << " " << f.good() << std::endl;
+  if (!f.good()) {
+    return false;
+  }
+
+
+  bool ok = ReadBinary(f);
+  f.close();
+  return ok;
+}
+
 bool HammingTree::ReadBinary(std::istream &in) {
   tree_.clear();
   delete[] reinterpret_cast<uint8_t *>(descriptors_);
@@ -309,13 +340,19 @@ bool HammingTree::ReadBinary(std::istream &in) {
   }
 
   tree_.resize(num_nodes);
+  weights_.resize(num_nodes);
+  node_ids_.resize(num_nodes);
   descriptors_ = reinterpret_cast<uint8_t (*)[32]>(new uint8_t[num_nodes*32]);
 
   in.read(reinterpret_cast<char *>(&tree_[0]), num_nodes*sizeof(Node));
   in.read(reinterpret_cast<char *>(descriptors_[0]), num_nodes*32);
+  in.read(reinterpret_cast<char *>(&weights_[0]), num_nodes*sizeof(weights_[0]));
+  in.read(reinterpret_cast<char *>(&node_ids_[0]), num_nodes*sizeof(node_ids_[0]));
 
   if (!in.good()) {
     tree_.clear();
+    weights_.clear();
+    node_ids_.clear();
     delete[] reinterpret_cast<uint8_t *>(descriptors_);
     descriptors_ = nullptr;
     return false;
@@ -323,11 +360,26 @@ bool HammingTree::ReadBinary(std::istream &in) {
   return true;
 }
 
+bool HammingTree::WriteBinary(const std::string &filename) {
+  std::ofstream f;
+  f.open(filename, std::ios::out | std::ios::binary);
+
+  if (!f.good()) {
+    return false;
+  }
+
+  bool ok = WriteBinary(f);
+  f.close();
+  return ok;
+}
+
 bool HammingTree::WriteBinary(std::ostream &out) {
   size_t num_nodes = tree_.size();
   out.write(reinterpret_cast<char *>(&num_nodes), sizeof(num_nodes));
   out.write(reinterpret_cast<char *>(&tree_[0]), num_nodes*sizeof(Node));
   out.write(reinterpret_cast<char *>(descriptors_[0]), num_nodes*32);
+  out.write(reinterpret_cast<char *>(&weights_[0]), num_nodes*sizeof(weights_[0]));
+  out.write(reinterpret_cast<char *>(&node_ids_[0]), num_nodes*sizeof(node_ids_[0]));
 
   return out.good();
 }

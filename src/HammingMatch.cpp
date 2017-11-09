@@ -23,82 +23,85 @@ using namespace match_params;
 
 template <typename LS, bool n_bests>
 void hammingMatch256Base(
-    uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *haystack_indices, size_t *needle_indices,
+    uint32_t *matches, const uint8_t *haystack, const uint8_t *needle,
+    const size_t *haystack_indices, const size_t *needle_indices,
     size_t num_haystack, size_t num_needle, size_t haystack_base);
 
-void hammingMatch256ddd(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t num_haystack, size_t num_needle, size_t haystack_base) {
+void hammingMatch256ddd(uint32_t *matches, const uint8_t *haystack,
+    const uint8_t *needle, size_t num_haystack, size_t num_needle,
+    size_t haystack_base) {
 
   hammingMatch256Base<DDD, best1>(
       matches, haystack, needle, nullptr, nullptr,
       num_haystack, num_needle, haystack_base);
 }
 
-void hammingMatch256ddi(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *needle_indices, size_t num_haystack, size_t num_needle,
-    size_t haystack_base) {
+void hammingMatch256ddi(uint32_t *matches, const uint8_t *haystack,
+    const uint8_t *needle, const size_t *needle_indices, size_t num_haystack,
+    size_t num_needle, size_t haystack_base) {
 
   hammingMatch256Base<DDI, best1>(
       matches, haystack, needle, nullptr, needle_indices,
       num_haystack, num_needle, haystack_base);
 }
 
-void hammingMatch256did(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *haystack_indices, size_t num_haystack, size_t num_needle,
-    size_t haystack_base) {
+void hammingMatch256did(uint32_t *matches, const uint8_t *haystack,
+    const uint8_t *needle, const size_t *haystack_indices, size_t num_haystack,
+    size_t num_needle, size_t haystack_base) {
 
   hammingMatch256Base<DID, best1>(
       matches, haystack, needle, haystack_indices, nullptr,
       num_haystack, num_needle, haystack_base);
 }
 
-void hammingMatch256idi(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *needle_indices, size_t num_haystack, size_t num_needle,
-    size_t haystack_base) {
+void hammingMatch256idi(uint32_t *matches, const uint8_t *haystack,
+    const uint8_t *needle, const size_t *needle_indices, size_t num_haystack,
+    size_t num_needle, size_t haystack_base) {
 
   hammingMatch256Base<IDI, best1>(
       matches, haystack, needle, nullptr, needle_indices,
       num_haystack, num_needle, haystack_base);
 }
 
-void hammingMatch256dii(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *haystack_indices, size_t *needle_indices,
-    size_t num_haystack, size_t num_needle, size_t haystack_base) {
+void hammingMatch256dii(uint32_t *matches, const uint8_t *haystack,
+    const uint8_t *needle, const size_t *haystack_indices,
+    const size_t *needle_indices, size_t num_haystack, size_t num_needle,
+    size_t haystack_base) {
 
   hammingMatch256Base<DII, best1>(
       matches, haystack, needle, haystack_indices, needle_indices,
       num_haystack, num_needle, haystack_base);
 }
 
-void hammingMatch256ddd2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t num_haystack, size_t num_needle, size_t haystack_base) {
+void hammingMatch256ddd2(uint32_t *matches, const uint8_t *haystack,
+    const uint8_t *needle, size_t num_haystack, size_t num_needle,
+    size_t haystack_base) {
 
   hammingMatch256Base<DDD, best2>(
       matches, haystack, needle, nullptr, nullptr,
       num_haystack, num_needle, haystack_base);
 }
 
-void hammingMatch256ddi2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *needle_indices, size_t num_haystack, size_t num_needle,
-    size_t haystack_base) {
+void hammingMatch256ddi2(uint32_t *matches, const uint8_t *haystack,
+    const uint8_t *needle, const size_t *needle_indices, size_t num_haystack,
+    size_t num_needle, size_t haystack_base) {
 
   hammingMatch256Base<DDI, best2>(
       matches, haystack, needle, nullptr, needle_indices,
       num_haystack, num_needle, haystack_base);
 }
 
-void hammingMatch256idi2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *needle_indices, size_t num_haystack, size_t num_needle,
-    size_t haystack_base) {
+void hammingMatch256idi2(uint32_t *matches, const uint8_t *haystack,
+    const uint8_t *needle, const size_t *needle_indices, size_t num_haystack,
+    size_t num_needle, size_t haystack_base) {
 
   hammingMatch256Base<IDI, best2>(
       matches, haystack, needle, nullptr, needle_indices,
       num_haystack, num_needle, haystack_base);
 }
 
-void hammingMatch256dii2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *haystack_indices, size_t *needle_indices,
+void hammingMatch256dii2(uint32_t *matches, const uint8_t *haystack, const uint8_t *needle,
+    const size_t *haystack_indices, const size_t *needle_indices,
     size_t num_haystack, size_t num_needle, size_t haystack_base) {
 
   hammingMatch256Base<DII, best2>(
@@ -106,9 +109,9 @@ void hammingMatch256dii2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
       num_haystack, num_needle, haystack_base);
 }
 
-void hammingMatch256did2(uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *haystack_indices, size_t num_haystack, size_t num_needle,
-    size_t haystack_base) {
+void hammingMatch256did2(uint32_t *matches, const uint8_t *haystack,
+    const uint8_t *needle, const size_t *haystack_indices, size_t num_haystack,
+    size_t num_needle, size_t haystack_base) {
 
   hammingMatch256Base<DID, best2>(
       matches, haystack, needle, haystack_indices, nullptr,
@@ -121,7 +124,7 @@ struct DenseMatch {
 
   template <bool best2>
   static inline
-  void Store4(uint32_t *&matches, size_t *&indices,
+  void Store4(uint32_t *&matches, const size_t *&indices,
       uint32x4_t &bests, uint32x4_t &bests2) {
 
     if (best2) {
@@ -136,7 +139,8 @@ struct DenseMatch {
 
   template <bool best2>
   static inline
-  uint32_t *MatchAddress(size_t *indices, uint32_t *&matches, size_t index) {
+  uint32_t *MatchAddress(const size_t *indices, uint32_t *&matches,
+      size_t index) {
     if (best2) {
       return &matches[index*2];
     } else {
@@ -149,7 +153,7 @@ struct IndexMatch {
 
   template <bool best2>
   static inline
-  void Store4(uint32_t *&matches, size_t *&indices,
+  void Store4(uint32_t *&matches, const size_t *&indices,
       uint32x4_t &bests, uint32x4_t &bests2) {
 
     if (best2) {
@@ -169,7 +173,8 @@ struct IndexMatch {
 
   template <bool best2>
   static inline
-  uint32_t *MatchAddress(size_t *indices, uint32_t *&matches, size_t index) {
+  uint32_t *MatchAddress(const size_t *indices, uint32_t *&matches,
+      size_t index) {
     if (best2) {
       return &matches[indices[index]*2];
     } else {
@@ -180,96 +185,109 @@ struct IndexMatch {
 
 struct DenseHaystack {
   static inline
-  uint8x16_t HaystackLo(size_t *&indices, uint8_t *&haystack, size_t index) {
-      uint8x16_t ret = vld1q_u8(haystack);
-      haystack += 16;
-      return ret;
-  }
-
-  static inline
-  uint8x16_t HaystackHi(size_t *&indices, uint8_t *&haystack, size_t index) {
+  uint8x16_t HaystackLo(const size_t *&indices, const uint8_t *&haystack,
+      size_t index) {
     uint8x16_t ret = vld1q_u8(haystack);
     haystack += 16;
     return ret;
   }
 
   static inline
-  uint16x4_t HaystackIndexLo(size_t *&indices, size_t index, size_t base) {
+  uint8x16_t HaystackHi(const size_t *&indices, const uint8_t *&haystack,
+      size_t index) {
+    uint8x16_t ret = vld1q_u8(haystack);
+    haystack += 16;
+    return ret;
+  }
+
+  static inline
+  uint16x4_t HaystackIndexLo(const size_t *&indices, size_t index,
+      size_t base) {
     return  vdup_n_u16(base + index);
   }
 
   static inline
-  uint8x8_t HaystackIndexHi(size_t *&indices, size_t index, size_t base) {
+  uint8x8_t HaystackIndexHi(const size_t *&indices, size_t index, size_t base) {
     return vdup_n_u8((base + index) >> 16);
   }
 
   static inline
-  size_t HaystackIndex(size_t *&indices, size_t index, size_t base) {
+  size_t HaystackIndex(const size_t *&indices, size_t index, size_t base) {
     return base + index;
   }
 };
 
 struct IndexHaystack {
   static inline
-  uint8x16_t HaystackLo(size_t *&indices, uint8_t *&haystack, size_t index) {
+  uint8x16_t HaystackLo(const size_t *&indices, const uint8_t *&haystack,
+      size_t index) {
     return vld1q_u8(&haystack[indices[index]*32]);
   }
 
   static inline
-  uint8x16_t HaystackHi(size_t *&indices, uint8_t *&haystack, size_t index) {
+  uint8x16_t HaystackHi(const size_t *&indices, const uint8_t *&haystack,
+      size_t index) {
     return vld1q_u8(&haystack[indices[index]*32+16]);
   }
 
   static inline
-  uint16x4_t HaystackIndexLo(size_t *&indices, size_t index, size_t base) {
+  uint16x4_t HaystackIndexLo(const size_t *&indices, size_t index,
+      size_t base) {
     return vdup_n_u16(base + indices[index]);
   }
 
   static inline
-  uint8x8_t HaystackIndexHi(size_t *&indices, size_t index, size_t base) {
+  uint8x8_t HaystackIndexHi(const size_t *&indices, size_t index,
+      size_t base) {
     return vdup_n_u8((base + indices[index]) >> 16);
   }
 
   static inline
-  size_t HaystackIndex(size_t *&indices, size_t index, size_t base) {
+  size_t HaystackIndex(const size_t *&indices, size_t index, size_t base) {
     return base + indices[index];
   }
 };
 
 struct DenseNeedle {
   static inline
-  uint8x16_t NeedleLo(size_t *indices, uint8_t *&needle, size_t index) {
+  uint8x16_t NeedleLo(const size_t *indices, const uint8_t *&needle,
+      size_t index) {
     uint8x16_t ret = vld1q_u8(needle);
     needle += 16;
     return ret;
   }
 
   static inline
-  uint8x16_t NeedleHi(size_t *indices, uint8_t *&needle, size_t index) {
+  uint8x16_t NeedleHi(const size_t *indices, const uint8_t *&needle,
+      size_t index) {
     uint8x16_t ret = vld1q_u8(needle);
     needle += 16;
     return ret;
   }
 
   static inline
-  uint8_t *NeedleAddress(size_t *indices, uint8_t *&needle, size_t index) {
+  const uint8_t *NeedleAddress(const size_t *indices, const uint8_t *&needle,
+      size_t index) {
     return &needle[index*32];
   }
 };
 
 struct IndexNeedle {
   static inline
-  uint8x16_t NeedleLo(size_t *indices, uint8_t *&needle, size_t index) {
+  uint8x16_t NeedleLo(const size_t *indices, const uint8_t *&needle,
+      size_t index) {
     return vld1q_u8(&needle[indices[index]*32]);
   }
 
   static inline
-  uint8x16_t NeedleHi(size_t *indices, uint8_t *&needle, size_t index) {
+  uint8x16_t NeedleHi(const size_t *indices, const uint8_t *&needle,
+      size_t index) {
     return vld1q_u8(&needle[indices[index]*32+16]);
   }
 
   static inline
-  uint8_t *NeedleAddress(size_t *indices, uint8_t *&needle, size_t index) {
+  const uint8_t *NeedleAddress(const size_t *indices, const uint8_t *&needle,
+      size_t index) {
     return &needle[indices[index]*32];
   }
 };
@@ -295,7 +313,7 @@ struct DDI : public DenseMatch, public DenseHaystack, public IndexNeedle {
   // used with indexed needles, we need to advance indices ourselves.
   template <bool n_bests>
   static inline
-  void Store4(uint32_t *&matches, size_t *&indices,
+  void Store4(uint32_t *&matches, const size_t *&indices,
       uint32x4_t &bests, uint32x4_t &bests2) {
     DenseMatch::template Store4<n_bests>(matches, indices, bests, bests2);
     indices += 4;
@@ -306,7 +324,7 @@ struct IDI : public IndexMatch, public DenseHaystack, public IndexNeedle {};
 struct DII : public DenseMatch, public IndexHaystack, public IndexNeedle {
   template <bool n_bests>
   static inline
-  void Store4(uint32_t *&matches, size_t *&indices,
+  void Store4(uint32_t *&matches, const size_t *&indices,
       uint32x4_t &bests, uint32x4_t &bests2) {
     DenseMatch::template Store4<n_bests>(matches, indices, bests, bests2);
     indices += 4;
@@ -317,13 +335,13 @@ struct DII : public DenseMatch, public IndexHaystack, public IndexNeedle {
 
 template <typename LS, bool n_bests>
 void hammingMatchOne256Base(
-    uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *haystack_indices, size_t num_haystack, size_t haystack_base);
+    uint32_t *matches, const uint8_t *haystack, const uint8_t *needle,
+    const size_t *haystack_indices, size_t num_haystack, size_t haystack_base);
 
 template <typename LS, bool n_bests>
 void hammingMatch256Base(
-    uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *haystack_indices, size_t *needle_indices,
+    uint32_t *matches, const uint8_t *haystack, const uint8_t *needle,
+    const size_t *haystack_indices, const size_t *needle_indices,
     size_t num_haystack, size_t num_needle, size_t haystack_base) {
     
   if (num_haystack == 0 || num_needle == 0) {
@@ -354,8 +372,8 @@ void hammingMatch256Base(
     uint32x4_t bests = vdupq_n_u32(0xffffffff);
     uint32x4_t bests2 = vdupq_n_u32(0xffffffff);
       
-    uint8_t *haystack_ptr = haystack;
-    size_t *haystack_iptr = haystack_indices;
+    const uint8_t *haystack_ptr = haystack;
+    const size_t *haystack_iptr = haystack_indices;
     size_t h;
     uint8x16_t haystackl = LS::HaystackLo(haystack_iptr, haystack_ptr, 0);
     uint8x16_t haystackh = LS::HaystackHi(haystack_iptr, haystack_ptr, 0);
@@ -501,8 +519,8 @@ void hammingMatch256Base(
 
 template <typename LS, bool n_bests>
 void hammingMatchOne256Base(
-    uint32_t *matches, uint8_t *haystack, uint8_t *needle,
-    size_t *haystack_indices, size_t num_haystack, size_t haystack_base) {
+    uint32_t *matches, const uint8_t *haystack, const uint8_t *needle,
+    const size_t *haystack_indices, size_t num_haystack, size_t haystack_base) {
     
   uint32_t bests = static_cast<uint32_t>(-1);
   uint32_t bests2 = static_cast<uint32_t>(-1);
